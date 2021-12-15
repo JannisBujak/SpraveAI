@@ -1,0 +1,9 @@
+@ECHO OFF
+set botpath="C:\Users\JannisB98\OneDrive\Repos\SlingshotVSZombiesBot"
+adb.exe devices
+ECHO Start
+:MARKER
+	python3 %botpath%\SlingshotVSZombiesBot.py
+	goto MARKER
+
+PAUSE
