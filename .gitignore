@@ -1,4 +1,4 @@
 ipch/
 *.opendb
-*/Release
-*/Debug
+**/Release
+**/Debug
