@@ -54,11 +54,11 @@ void thread_routine(char* arg)
 		Py_SetProgramName(program);  /* optional but recommended */
 		Py_Initialize();
 		int64_t time = 0;
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			int64_t new_time = millis();
 			int64_t diff = new_time - time;
-			double frequency = 1000.0 / (diff);
+			double frequency = 1000.0 / (diff/1);
 			time = new_time;
 			std::cout << diff << "ms\t" << frequency << "fps" << std::endl;
 
@@ -66,18 +66,20 @@ void thread_routine(char* arg)
 			char command[800];
 			sprintf_s(command, sizeof(command),
 				"from ppadb.client import Client as AdbClient \n\
-client = AdbClient(host='127.0.0.1', port=5037) \n\
+client = AdbClient() \n\
 devices = client.devices() \n\
 device = devices[0] \n\
 if device is None: \n\
 	print('Initialization failed') \n\
 	quit() \n\
-image = device.screencap()\n\
-\n\
-ssName = f'C:/Users/JannisB98/mydata/Prog/vsProjekte/SpraveAI/SpraveAI/screencaps/SvZ_Bot_Cap{%i}.png' \n\
-print(ssName) \n\
-with open(ssName, 'wb') as file: \n\
-	file.write(image)", i%5);
+i = 0\n\
+while(i < 1): \n\
+	image = device.screencap()\n\
+	ssName = f'screencaps/SvZ_Bot_Cap{i}.png' \n\
+	#print(ssName) \n\
+	#with open(ssName, 'wb') as file: \n\
+	#	file.write(image)\n\
+	i = i + 1");
 
 
 			PyRun_SimpleString(command);
@@ -88,7 +90,6 @@ with open(ssName, 'wb') as file: \n\
 			exit(120);
 		}
 		PyMem_RawFree(program);
-
 	}
 }
 
@@ -122,9 +123,10 @@ int main(int argc, char* argv[])
 		std::cout << diff << "ms\t" << frequency << "fps" << std::endl;
 
 		
-		// AdbCommunication::get_screencap(filenane_phone, buffer);
+		AdbCommunication::get_screencap(filenane_phone, buffer);
 	}
 	*/
+	
 	
 
 	
