@@ -1,4 +1,3 @@
-Release/
-Debug/
-**/Release/
-**/Debug/
+/Release
+/Debug
+.opendb
