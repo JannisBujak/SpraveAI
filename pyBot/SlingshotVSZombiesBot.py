@@ -187,11 +187,13 @@ def main():
         
         image = device.screencap()
         
-        ssName = f"C:/temp/SvZ_Bot_Cap{(i%10)}.png"
+        #ssName = f"C:/temp/SvZ_Bot_Cap{(i%10)}.png"
+        ssName = f"C:/Users/JannisB98/mydata/Prog/vsProjekte/SpraveAI/SpraveAI/screencaps/SvZ_Bot_Cap{(i%10)}.png"
         print(ssName)
         with open(ssName, "wb") as file:
             file.write(image)
             
+        """
         image = cv2.imread(ssName)
 
         bot = Bot(image, device)
@@ -200,5 +202,6 @@ def main():
         
         bot.process()
         print(millis() - last_ts)
+        """
 
 main()

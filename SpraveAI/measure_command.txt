@@ -1,1 +1,0 @@
-Measure-Command {adb shell screencap -p /sdcard/temp/p.png | adb pull /sdcard/temp/p.png pp.png}

@@ -12,9 +12,14 @@
 #include <conio.h>
 #include <Python.h>
 
+#include <thread>
+
 char png_folder[] = "screencaps";
 char filenane_phone[] = "/sdcard/temp/scrcap.png ";
- 
+
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+
 void mkdir(const char* foldername)
 {
 	char buffer[30];
@@ -37,12 +42,76 @@ int64_t millis()
 	return ms.count();
 }
 
-int main()
+void thread_routine(char* arg)
+{
+	{
+		wchar_t* program = Py_DecodeLocale(arg, NULL);
+		if (program == NULL)
+		{
+			fprintf(stderr, "Fatal error: cannot decode argv[0]\n");
+			exit(1);
+		}
+		Py_SetProgramName(program);  /* optional but recommended */
+		Py_Initialize();
+		int64_t time = 0;
+		for (int i = 0; i < 10; i++)
+		{
+			int64_t new_time = millis();
+			int64_t diff = new_time - time;
+			double frequency = 1000.0 / (diff);
+			time = new_time;
+			std::cout << diff << "ms\t" << frequency << "fps" << std::endl;
+
+
+			char command[800];
+			sprintf_s(command, sizeof(command),
+				"from ppadb.client import Client as AdbClient \n\
+client = AdbClient(host='127.0.0.1', port=5037) \n\
+devices = client.devices() \n\
+device = devices[0] \n\
+if device is None: \n\
+	print('Initialization failed') \n\
+	quit() \n\
+image = device.screencap()\n\
+\n\
+ssName = f'C:/Users/JannisB98/mydata/Prog/vsProjekte/SpraveAI/SpraveAI/screencaps/SvZ_Bot_Cap{%i}.png' \n\
+print(ssName) \n\
+with open(ssName, 'wb') as file: \n\
+	file.write(image)", i%5);
+
+
+			PyRun_SimpleString(command);
+
+		}		
+
+		if (Py_FinalizeEx() < 0) {
+			exit(120);
+		}
+		PyMem_RawFree(program);
+
+	}
+}
+
+int main(int argc, char* argv[])
 {
 	char buffer[100];
 	mkdir(png_folder);
 	string_concat(buffer, png_folder, "/capture.png");
 	
+	
+	// std::thread png_save_thread(thread_routine, argv[0]);
+	thread_routine(argv[0]);
+
+	/*
+	while (!png_save_thread.joinable())
+	{
+		std::cout << "LELELE" << std::endl;
+	}
+	png_save_thread.join();
+	std::cout << "Finished" << std::endl;
+	*/
+
+	/*
 	int64_t time = 0;
 	while (1)
 	{
@@ -51,8 +120,11 @@ int main()
 		double frequency = 1000.0 / (diff);
 		time = new_time;
 		std::cout << diff << "ms\t" << frequency << "fps" << std::endl;
-		AdbCommunication::get_screencap(filenane_phone, buffer);
+
+		
+		// AdbCommunication::get_screencap(filenane_phone, buffer);
 	}
+	*/
 	
 
 	
