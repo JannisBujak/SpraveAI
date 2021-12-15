@@ -9,6 +9,8 @@
 
 #include "AdbCommunication.h"
 
+#include <conio.h>
+#include <Python.h>
 
 char png_folder[] = "screencaps";
 char filenane_phone[] = "/sdcard/temp/scrcap.png ";
