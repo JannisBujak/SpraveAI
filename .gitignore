@@ -6,7 +6,7 @@ ipch/
 *.sdf
 *.cachefile
 
-*.bak
+**.bak
 
 **/Release
 **/Debug
