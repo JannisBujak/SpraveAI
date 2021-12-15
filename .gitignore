@@ -1,4 +1,12 @@
 ipch/
+*.aps
+*.ncb
 *.opendb
+*.opensdf
+*.sdf
+*.cachefile
+
+*.bak
+
 **/Release
 **/Debug
