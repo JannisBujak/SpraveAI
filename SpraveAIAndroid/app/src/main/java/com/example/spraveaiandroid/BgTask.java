@@ -16,10 +16,14 @@ public class BgTask extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Ringtone ringtone = RingtoneManager.getRingtone(context, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-        ringtone.play();
-        Toast.makeText(context, "FEF", Toast.LENGTH_LONG).show();
+        while(true)
+        {
+            ringtone.play();
+            Toast.makeText(context, "FEF", Toast.LENGTH_LONG).show();
+            SystemClock.sleep(1000);
+            ringtone.stop();
+            SystemClock.sleep(1000);
+        }
 
-        SystemClock.sleep(1000);
-        ringtone.stop();
     }
 }

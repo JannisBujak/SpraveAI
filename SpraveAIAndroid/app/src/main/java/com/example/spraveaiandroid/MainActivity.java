@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, 1000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, 0, 1000, pendingIntent);
 
         finish();
     }
