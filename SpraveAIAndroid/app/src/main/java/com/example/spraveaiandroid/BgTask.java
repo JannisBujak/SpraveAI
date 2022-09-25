@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.os.Bundle;
 import android.os.SystemClock;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class BgTask extends BroadcastReceiver {
 

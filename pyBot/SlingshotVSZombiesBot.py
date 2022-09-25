@@ -4,7 +4,7 @@ import numpy as np
 from enum import Enum, auto
 import cv2
 import time
-import threading, queue
+import threading, queue, os
 
 def getSingleDevice():
     # Default is "127.0.0.1" and 5037
@@ -187,13 +187,13 @@ def main():
         
         image = device.screencap()
         
-        #ssName = f"C:/temp/SvZ_Bot_Cap{(i%10)}.png"
-        ssName = f"C:/Users/JannisB98/mydata/Prog/vsProjekte/SpraveAI/SpraveAI/screencaps/SvZ_Bot_Cap{(i%10)}.png"
-        print(ssName)
+        ssName = os.path.join(os.path.dirname(__file__), f"pictures/SvZ_Bot_Cap{(i%10)}.png")
+        
+        print(f"SSNAME={ssName}")
         with open(ssName, "wb") as file:
             file.write(image)
             
-        """
+        
         image = cv2.imread(ssName)
 
         bot = Bot(image, device)
@@ -202,6 +202,6 @@ def main():
         
         bot.process()
         print(millis() - last_ts)
-        """
+        
 
 main()

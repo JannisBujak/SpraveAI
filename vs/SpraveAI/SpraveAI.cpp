@@ -3,22 +3,17 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
-#include <string>
 
+#include <string>
 #include <chrono>
+#include <thread>
+#include <mutex>
 
 #include "AdbCommunication.h"
 
-#include <conio.h>
-#include <Python.h>
-
-#include <thread>
-
-char png_folder[] = "screencaps";
-char filenane_phone[] = "/sdcard/temp/scrcap.png ";
-
-#define PY_SSIZE_T_CLEAN
-#include <Python.h>
+const char png_folder[] = "screencaps";
+// const char filenane_phone[] = "/sdcard/temp/scrcap.png";
+const char filenane_phone[] = "/storage/emulated/0/mytemp/scrcap.png";
 
 void mkdir(const char* foldername)
 {
@@ -42,66 +37,41 @@ int64_t millis()
 	return ms.count();
 }
 
-void thread_routine(char* arg)
+void getNextScreenshot(std::mutex* run_mutex, std::mutex* mutex)
 {
+	std::cout << "Thread geht ab" << std::endl;
+	uint64_t counter;
+	for(counter = 0; run_mutex->try_lock(); counter++)
 	{
-		wchar_t* program = Py_DecodeLocale(arg, NULL);
-		if (program == NULL)
-		{
-			fprintf(stderr, "Fatal error: cannot decode argv[0]\n");
-			exit(1);
-		}
-		Py_SetProgramName(program);  /* optional but recommended */
-		Py_Initialize();
-		int64_t time = 0;
-		for (int i = 0; i < 100; i++)
-		{
-			int64_t new_time = millis();
-			int64_t diff = new_time - time;
-			double frequency = 1000.0 / (diff/1);
-			time = new_time;
-			std::cout << diff << "ms\t" << frequency << "fps" << std::endl;
-
-
-			char command[800];
-			sprintf_s(command, sizeof(command),
-				"from ppadb.client import Client as AdbClient \n\
-client = AdbClient() \n\
-devices = client.devices() \n\
-device = devices[0] \n\
-if device is None: \n\
-	print('Initialization failed') \n\
-	quit() \n\
-i = 0\n\
-while(i < 1): \n\
-	image = device.screencap()\n\
-	ssName = f'screencaps/SvZ_Bot_Cap{i}.png' \n\
-	#print(ssName) \n\
-	#with open(ssName, 'wb') as file: \n\
-	#	file.write(image)\n\
-	i = i + 1");
-
-
-			PyRun_SimpleString(command);
-
-		}		
-
-		if (Py_FinalizeEx() < 0) {
-			exit(120);
-		}
-		PyMem_RawFree(program);
-	}
+		run_mutex->unlock();
+		AdbCommunication::Device::get_screencap(filenane_phone, png_folder);
+	}	
+	std::cout << "Thread finished after " << counter << " screenshots" << std::endl;
 }
 
 int main(int argc, char* argv[])
 {
+	std::mutex thread_running_mutex, file_mutex;
 	char buffer[100];
 	mkdir(png_folder);
 	string_concat(buffer, png_folder, "/capture.png");
 	
+	uint64_t start_millis = millis(), end_millis;
+
+	std::thread imggetter_thread(getNextScreenshot, &thread_running_mutex , &file_mutex);
+
+	std::this_thread::sleep_for(std::chrono::seconds(5));
+	std::lock_guard<std::mutex> guardiola(thread_running_mutex);
+	std::cout << "locked" << std::endl;
+	imggetter_thread.join();
+	
+	end_millis = millis();
+	std::cout << "Start:\t" << start_millis << std::endl
+		<< "End:\t" << end_millis << std::endl
+		<< "Difference:\t" << (end_millis - start_millis) << std::endl;
 	
 	// std::thread png_save_thread(thread_routine, argv[0]);
-	thread_routine(argv[0]);
+	// thread_routine(argv[0]);
 
 	/*
 	while (!png_save_thread.joinable())
@@ -126,20 +96,5 @@ int main(int argc, char* argv[])
 		AdbCommunication::get_screencap(filenane_phone, buffer);
 	}
 	*/
-	
-	
-
-	
 }
-
-
-
-
-
-
-
-
-
-
-
 

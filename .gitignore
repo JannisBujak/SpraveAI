@@ -12,3 +12,4 @@ ipch/
 **/Debug
 **/x64
 **/screencaps
+**/.vs
