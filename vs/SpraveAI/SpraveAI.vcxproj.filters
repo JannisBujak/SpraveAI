@@ -21,9 +21,15 @@
     <ClCompile Include="AdbCommunication.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="ScreenscapThread.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdbCommunication.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenscapThread.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
